@@ -1,0 +1,65 @@
+## @file
+#
+#  INF PrototypeOne
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = PrototypeOne
+  FILE_GUID                      = 69f96686-f51f-4b8f-885d-660f923ac337
+  MODULE_TYPE                    = UEFI_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = PrototypeOneEntryPoint
+
+
+
+[Sources]
+    PrototypeOne.c
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  NetworkPkg/NetworkPkg.dec
+
+[LibraryClasses]
+  UefiDriverEntryPoint
+  UefiBootServicesTableLib # gBS and gST pointers
+  UefiRuntimeServicesTableLib # gRT pointer
+  UefiLib
+  BaseLib
+
+  DebugLib
+  #PrintLib # sprintf like functions
+
+  BaseMemoryLib
+  MemoryAllocationLib
+  
+  #FileHandleLib
+  #PrintLib
+
+  #NetLib
+
+  # custom libs
+  #MiscUtilsLib
+  #StringUtilsLib
+  #FileUtilsLib
+  #EthRpcLib
+
+[Guids]
+
+
+[Protocols] 
+  gEfiHttpServiceBindingProtocolGuid 
+  gEfiSimpleFileSystemProtocolGuid   
+  gEfiSmbiosProtocolGuid             
+  gEfiHttpProtocolGuid               
+  gEfiIp4Config2ProtocolGuid         
+  gEfiIp4ServiceBindingProtocolGuid  
+  gEfiDns4ServiceBindingProtocolGuid 
+  gEfiSimpleNetworkProtocolGuid
+  gEfiTcp4ProtocolGuid
+  gEfiHttpServiceBindingProtocolGuid
+
+
+[Depex]
+  TRUE
