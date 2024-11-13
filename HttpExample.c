@@ -1,7 +1,9 @@
 #include <Uefi.h>
-#include "../../NetworkPkg/Include/Protocol/Http.h"
 #include <Library/UefiLib.h>
 #include <Library/UefiApplicationEntryPoint.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Protocol/ServiceBinding.h>
+#include <Protocol/Http.h>
 
 #define BUFFER_SIZE 0x100000
 
@@ -27,31 +29,43 @@ HttpExampleMain (
   EFI_STATUS                   Status;
   UINT8                        *Buffer;
   EFI_SERVICE_BINDING_PROTOCOL *ServiceBinding;
+  EFI_HANDLE                   Handle;
+  EFI_HTTP_PROTOCOL            *HttpProtocol;
 
-  Status = gBS->AllocatePool(
+  Status = SystemTable->BootServices->AllocatePool(
     EfiBootServicesData,
     BUFFER_SIZE,
     (VOID **)&Buffer
   );
   if (Buffer == NULL) {
     Print(L"Allocate Pool Failed\n");
-    DEBUG ((DEBUG_ERROR, "[Http Example] AllocatePool failed with %r\n", Status));
     return Status;
   }
 
 
   Status = gBS->LocateProtocol(
-  &gEfiHttpServiceBindingProtocolGuid,
-  NULL,
-  &ServiceBinding
+    &gEfiHttpServiceBindingProtocolGuid,
+    NULL,
+    (VOID **)&ServiceBinding
   );
   if (EFI_ERROR (Status)) {
     Print(L"Locate Protocol Failed\n");
-    DEBUG ((DEBUG_ERROR, "[HttpExanoke] LocateProtocol failed with %r\n", Status));
-    FreePool (Buffer);
-    Buffer = NULL;
     return Status;
   }
+
+  Status = ServiceBinding->CreateChild(ServiceBinding, &Handle);
+    if (EFI_ERROR (Status)) {
+    Print(L"CreateChild failed");
+    return Status;
+  }
+
+  Status = gBS->HandleProtocol(Handle, &gEfiHttpProtocolGuid, (VOID **)&HttpProtocol);
+    if (EFI_ERROR (Status)) {
+    Print(L"HandleProtocol failed");
+    ServiceBinding->DestroyChild (ServiceBinding, Handle);
+    return Status;
+  }
+
 
 
   Print(L"Welcome to Http Example!\n");
