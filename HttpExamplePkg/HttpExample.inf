@@ -1,0 +1,51 @@
+## @file
+#  Sample UEFI Application to test HTTP networking.
+#
+#  This is a sample shell application that will make an HTTP request and print a field in the response
+#
+#  Copyright (c) 2008 - 2018, SoftI9 Corporation. All rights reserved.<BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = HttpExample
+  FILE_GUID                      = BCA96FE0-E495-405D-A342-280162F84E01
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = HttpExampleMain
+
+#
+#  This flag specifies whether HII resource section is generated into PE image.
+#
+  UEFI_HII_RESOURCE_SECTION      = TRUE
+
+#
+# The following information is for reference only and not required by the build tools.
+#
+#  VALID_ARCHITECTURES           = IA32 X64 EBC
+#
+
+[Sources]
+  HttpExample.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  NetworkPkg/NetworkPkg.dec
+
+[LibraryClasses]
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  UefiLib
+
+  # Memory
+  MemoryAllocationLib
+
+[Protocols]
+  gEfiHttpServiceBindingProtocolGuid
+  gEfiIp4ServiceBindingProtocolGuid
+  gEfiHttpProtocolGuid
